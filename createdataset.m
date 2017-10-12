@@ -1,22 +1,23 @@
-function createdataset
+function createdataset()
 
-
-uf = dir('training_data/images/*.jpg');
-
-% size(uf)
+path = '/home/balamurali/Downloads/hand_dataset/validation_dataset/validation_data/';
+path_ = [path 'images/*.jpg'];
+uf = dir(path_);
+size(uf)
 
 for i = 1:length(uf)
     
     
     dot = strfind(uf(i).name,'.');
     imname = uf(i).name(1:dot-1);
-    load(['training_data/annotations/' imname '.mat']);
-    im = imread(['training_data/images/' uf(i).name]);
-    annot_filename = ['training_data/yoloannotation/',imname,'.txt'];
-%     annot_filename
+    
+    load([path 'annotations/' imname '.mat']);
+    im = imread([path 'images/' uf(i).name]);
+    annot_filename = [path 'yoloannotation/',imname,'.txt'];
     ann_data = fopen(annot_filename,'w');
     [imgw,imgh] = size(im);
 %     imshow(im);
+    
     for j = 1:length(boxes)
         box = boxes{j};
         
@@ -42,9 +43,7 @@ for i = 1:length(uf)
 %         break
     end
     fclose(ann_data);
-    
-%     imshow(im)
 %     disp('Press any key to move onto the next image');pause;
-    
 %     break
+    
 end
