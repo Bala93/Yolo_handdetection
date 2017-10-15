@@ -1,6 +1,6 @@
 function createdataset()
 
-path = '/home/balamurali/Downloads/hand_dataset/validation_dataset/validation_data/';
+path = '/home/balamurali/Downloads/hand_dataset/test_dataset/test_data/';
 path_ = [path 'images/*.jpg'];
 uf = dir(path_);
 size(uf)
@@ -15,7 +15,7 @@ for i = 1:length(uf)
     im = imread([path 'images/' uf(i).name]);
     annot_filename = [path 'yoloannotation/',imname,'.txt'];
     ann_data = fopen(annot_filename,'w');
-    [imgw,imgh] = size(im);
+    [imgh,imgw,~] = size(im);
 %     imshow(im);
     
     for j = 1:length(boxes)
@@ -31,13 +31,17 @@ for i = 1:length(uf)
         x2  = max(x_);
         y2  = max(y_);
         
-        bound_w = x2 - x1;
-        bound_h = y2 - y1;
+        bound_w = x2 - x1 + 1;
+        bound_h = y2 - y1 + 1;
+        
+        yolo_x = (x1 + x2 )/2;
+        yolo_y = (y1 + y2 )/2;
+        
         
 %         line([box.b(2) box.c(2) box.d(2) box.a(2)]',[box.b(1) box.c(1) box.d(1) box.a(1)]','LineWidth',3,'Color','r');
 %         line([box.b(2) box.c(2) box.d(2) box.a(2)]',[box.b(1) box.c(1) box.d(1) box.a(1)]','LineWidth',3,'Color','r');
 %         rectangle('Position',[x1,y1,bound_w,bound_h],'LineWidth',3,'EdgeColor','r');
-        lable_text =[num2str(1) ' ' num2str(x1/imgw) ' ' num2str(y1/imgh) ' ' num2str(bound_w/imgw) ' ' num2str(bound_h/imgh)];
+        lable_text =[num2str(0) ' ' num2str(yolo_x/imgw) ' ' num2str(yolo_y/imgh) ' ' num2str(bound_w/imgw) ' ' num2str(bound_h/imgh)];
         lable_text = [lable_text '\n'];
         fprintf(ann_data,lable_text);
 %         break
@@ -45,5 +49,5 @@ for i = 1:length(uf)
     fclose(ann_data);
 %     disp('Press any key to move onto the next image');pause;
 %     break
-    
+ 
 end
